@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.inventarioapp_pdm.screen.dashboard.DashboardScreen
+import com.example.inventarioapp_pdm.navigation.AppNavigation
 import com.example.inventarioapp_pdm.ui.theme.InventarioTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             InventarioTheme {
-                    DashboardScreen()
+                    AppNavigation()
             }
         }
     }

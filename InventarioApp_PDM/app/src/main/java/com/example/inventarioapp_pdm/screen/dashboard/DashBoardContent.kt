@@ -40,7 +40,8 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -115,7 +116,7 @@ fun DashboardContent(
                     // Más espacio para que las estadísticas no tapen el contenido
                     Spacer(modifier = Modifier.height(140.dp))
 
-                    QuickActionsSection()
+                    QuickActionsSection(onNavigate = onNavigate)
 
                     Spacer(modifier = Modifier.height(40.dp))
 

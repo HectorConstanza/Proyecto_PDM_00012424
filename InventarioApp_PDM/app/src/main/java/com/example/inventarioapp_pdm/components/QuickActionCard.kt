@@ -87,7 +87,9 @@ fun QuickActionCard(
 }
 
 @Composable
-fun QuickActionsSection() {
+fun QuickActionsSection(
+    onNavigate: (String) -> Unit = {}
+) {
 
     Column {
 
@@ -109,13 +111,17 @@ fun QuickActionsSection() {
                 icon = Icons.Default.Add,
                 iconBackground = DarkGreen,
                 modifier = Modifier.weight(1f)
-            ) {}
+            ) {
+                onNavigate("new_product")
+            }
 
             QuickActionCard(
                 title = "Escanear código",
                 icon = Icons.Default.QrCodeScanner,
                 modifier = Modifier.weight(1f)
-            ) {}
+            ) {
+                onNavigate("scanner")
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -129,13 +135,17 @@ fun QuickActionsSection() {
                 title = "Ver inventario",
                 icon = Icons.Default.Inventory,
                 modifier = Modifier.weight(1f)
-            ) {}
+            ) {
+                onNavigate("inventory")
+            }
 
             QuickActionCard(
                 title = "Nuevo despacho",
                 icon = Icons.Default.LocalShipping,
                 modifier = Modifier.weight(1f)
-            ) {}
+            ) {
+                onNavigate("dispatch")
+            }
         }
     }
 }

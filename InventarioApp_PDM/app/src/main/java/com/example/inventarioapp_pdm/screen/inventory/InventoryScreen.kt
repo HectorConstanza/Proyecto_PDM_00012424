@@ -1,33 +1,29 @@
-package com.example.inventarioapp_pdm.screen.dashboard
+package com.example.inventarioapp_pdm.screen.inventory
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-
-
 import com.example.inventarioapp_pdm.components.BottomNavigationBar
 
 @Composable
-fun DashboardScreen(
+fun InventoryScreen(
     onNavigate: (String) -> Unit = {}
 ) {
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
-                currentRoute = "dashboard",
+                currentRoute = "inventory",
                 onNavigate = onNavigate
             )
         }
     ) { paddingValues ->
-
-        DashboardContent(
+        InventoryContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = paddingValues.calculateBottomPadding()),
-            onNavigate = onNavigate
+            onBack = { onNavigate("dashboard") }
         )
     }
 }
