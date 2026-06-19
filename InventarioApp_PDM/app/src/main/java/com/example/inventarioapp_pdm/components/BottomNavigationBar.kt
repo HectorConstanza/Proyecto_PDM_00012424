@@ -96,7 +96,7 @@ fun BottomNavigationBar(
             }
         }
 
-        // Botón "+" Central (Floating Action Button)
+        // boton + para agregar mas productos
         FloatingActionButton(
             onClick = { onNavigate("new_product") },
             containerColor = PrimaryGreen,
@@ -105,7 +105,7 @@ fun BottomNavigationBar(
             elevation = FloatingActionButtonDefaults.elevation(4.dp),
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(y = (-20).dp) // Lo eleva para que sobresalga
+                .offset(y = (-20).dp) // lo pone mas arriba
                 .size(56.dp)
         ) {
             Icon(

@@ -24,34 +24,36 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InventoryContent(
+fun InventoryViewModel(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onProductClick: (Product) -> Unit = {}
 ) {
+    // datos harcordeados para que se vea llena la pantalla
     val products = listOf(
-        Product("Ventilador 18\"", "Caja", 15, "unidades"),
-        Product("Ventilador 16\"", "Unidad", 32, "unidades"),
-        Product("Ventilador de Mesa", "Unidad", 7, "unidades"),
-        Product("Extractor de Aire", "Caja", 3, "unidades"),
-        Product("Rejilla Metálica", "Caja", 30, "unidades"),
-        Product("Ventilador Industrial", "Unidad", 5, "unidades"),
-        Product("Aspas de Repuesto", "Set", 20, "unidades")
+        Product(name = "Ventilador 18\"", presentation = "Caja", stock = 15, category = "Ventiladores"),
+        Product(name = "Ventilador 16\"", presentation = "Unidad", stock = 32, category = "Ventiladores"),
+        Product(name = "Ventilador de Mesa", presentation = "Unidad", stock = 7, category = "Ventiladores"),
+        Product(name = "Extractor de Aire", presentation = "Caja", stock = 3, category = "Extractores"),
+        Product(name = "Rejilla Metálica", presentation = "Caja", stock = 30, category = "Repuestos"),
+        Product(name = "Ventilador Industrial", presentation = "Unidad", stock = 5, category = "Ventiladores"),
+        Product(name = "Aspas de Repuesto", presentation = "Set", stock = 20, category = "Repuestos")
     )
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Background)
-            .statusBarsPadding() // esto es para evitar que tope con algunos notch y que tambien sea mas responsive
+            .statusBarsPadding() // para que la cámara no nos tape el título
     ) {
 
+        // El encabezado con el botón de irse para atrás
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Botón Regresar
             IconButton(
                 onClick = { onBack() },
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -63,7 +65,6 @@ fun InventoryContent(
                 )
             }
 
-
             Text(
                 text = "Inventario",
                 fontSize = 20.sp,
@@ -72,7 +73,7 @@ fun InventoryContent(
             )
         }
 
-        // Search and Filter Section
+        // La barra de búsqueda y el filtro
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -104,12 +105,13 @@ fun InventoryContent(
             
             Spacer(modifier = Modifier.width(12.dp))
             
+            // Botón verde transparente para filtrar
             Surface(
                 modifier = Modifier.size(56.dp),
                 color = PrimaryGreen.copy(alpha = 0.1f),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                IconButton(onClick = { /* Filter */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Default.FilterList,
                         contentDescription = "Filtrar",
@@ -119,7 +121,7 @@ fun InventoryContent(
             }
         }
 
-        // Product List
+        // Aquí mostramos todos los productos en una lista
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -128,7 +130,10 @@ fun InventoryContent(
             contentPadding = PaddingValues(bottom = 24.dp)
         ) {
             items(products) { product ->
-                ProductItem(product = product)
+                ProductItem(
+                    product = product,
+                    onClick = { onProductClick(product) }
+                )
             }
         }
     }

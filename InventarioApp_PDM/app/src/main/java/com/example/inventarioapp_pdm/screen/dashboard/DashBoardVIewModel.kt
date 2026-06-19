@@ -1,29 +1,15 @@
 package com.example.inventarioapp_pdm.screen.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +25,7 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardContent(
+fun DashboardViewModel(
     modifier: Modifier = Modifier,
     onNavigate: (String) -> Unit = {}
 ) {
@@ -49,7 +35,7 @@ fun DashboardContent(
             .background(PrimaryGreen)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // Header Section
+            // La parte verde de arriba con el saludo
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,6 +53,7 @@ fun DashboardContent(
                         modifier = Modifier.size(28.dp)
                     )
                     
+                    // La campana de avisos con el circulito rojo
                     BadgedBox(
                         badge = {
                             Badge(
@@ -75,7 +62,8 @@ fun DashboardContent(
                             ) {
                                 Text("3")
                             }
-                        }
+                        },
+                        modifier = Modifier.clickable { onNavigate("notifications") }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
@@ -101,7 +89,7 @@ fun DashboardContent(
                 )
             }
 
-            // White Content Area
+            // El fondo blanco redondeado donde va el contenido
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = Background,
@@ -113,7 +101,7 @@ fun DashboardContent(
                         .verticalScroll(rememberScrollState())
                         .padding(horizontal = 24.dp)
                 ) {
-                    // Más espacio para que las estadísticas no tapen el contenido
+                    // Dejamos un hueco para que las tarjetas de arriba no tapen nada
                     Spacer(modifier = Modifier.height(140.dp))
 
                     QuickActionsSection(onNavigate = onNavigate)
@@ -127,7 +115,7 @@ fun DashboardContent(
             }
         }
 
-        // Stats Section Overlap
+        // Las tarjetitas de estadísticas que flotan en medio
         Box(
             modifier = Modifier
                 .fillMaxWidth()

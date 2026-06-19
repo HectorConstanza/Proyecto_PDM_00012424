@@ -23,7 +23,7 @@ fun DashboardScreen(
         }
     ) { paddingValues ->
 
-        DashboardContent(
+        DashboardViewModel(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = paddingValues.calculateBottomPadding()),

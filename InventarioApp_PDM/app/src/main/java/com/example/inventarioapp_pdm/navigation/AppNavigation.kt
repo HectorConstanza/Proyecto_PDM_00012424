@@ -6,15 +6,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.inventarioapp_pdm.screen.dashboard.DashboardScreen
 import com.example.inventarioapp_pdm.screen.inventory.InventoryScreen
+import com.example.inventarioapp_pdm.screen.product_detail.ProductDetailScreen
+import com.example.inventarioapp_pdm.screen.new_product.NewProductScreen
+import com.example.inventarioapp_pdm.screen.notifications.NotificationsScreen
 
 @Composable
 fun AppNavigation() {
+    // El control remoto de la navegación de toda la app
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
         startDestination = Routes.Dashboard.route
     ) {
+        // Pantalla principal donde se ve el resumen
         composable(Routes.Dashboard.route) {
             DashboardScreen(
                 onNavigate = { route ->
@@ -23,6 +28,7 @@ fun AppNavigation() {
             )
         }
         
+        // La lista con todos los productos del inventario
         composable(Routes.Inventory.route) {
             InventoryScreen(
                 onNavigate = { route ->
@@ -34,6 +40,30 @@ fun AppNavigation() {
                 }
             )
         }
-        
+
+        // El detalle completo de un solo producto
+        composable(Routes.ProductDetail.route) {
+            ProductDetailScreen(
+                onBack = { navController.popBackStack() },
+                onEdit = {  },
+                onDispatch = {  }
+            )
+        }
+
+        // Formulario para meter mercadería nueva
+        composable(Routes.NewProduct.route) {
+            NewProductScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Pantalla de notificaciones y avisos de stock bajo
+        composable(Routes.Notifications.route) {
+            NotificationsScreen(
+                onNavigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
     }
 }

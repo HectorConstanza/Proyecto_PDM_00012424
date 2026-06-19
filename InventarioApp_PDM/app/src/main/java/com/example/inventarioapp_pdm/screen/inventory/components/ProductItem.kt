@@ -1,5 +1,6 @@
 package com.example.inventarioapp_pdm.screen.inventory.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,9 +20,14 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 import com.example.inventarioapp_pdm.ui.theme.RedStock
 
 @Composable
-fun ProductItem(product: Product) {
+fun ProductItem(
+    product: Product,
+    onClick: () -> Unit = {}
+) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         color = Color.White,
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 2.dp
@@ -32,7 +38,6 @@ fun ProductItem(product: Product) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Product Image Placeholder
             Surface(
                 modifier = Modifier.size(60.dp),
                 color = Color(0xFFF5F5F5),
