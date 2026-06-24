@@ -9,6 +9,8 @@ import com.example.inventarioapp_pdm.screen.inventory.InventoryScreen
 import com.example.inventarioapp_pdm.screen.product_detail.ProductDetailScreen
 import com.example.inventarioapp_pdm.screen.new_product.NewProductScreen
 import com.example.inventarioapp_pdm.screen.notifications.NotificationsScreen
+import com.example.inventarioapp_pdm.screen.dispatch.DispatchScreen
+import com.example.inventarioapp_pdm.screen.profile.ProfileScreen
 
 @Composable
 fun AppNavigation() {
@@ -60,6 +62,24 @@ fun AppNavigation() {
         // Pantalla de notificaciones y avisos de stock bajo
         composable(Routes.Notifications.route) {
             NotificationsScreen(
+                onNavigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+
+        // Pantalla para sacar productos (Despachos)
+        composable(Routes.Dispatch.route) {
+            DispatchScreen(
+                onNavigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+
+        // Pantalla con los datos del usuario logueado
+        composable(Routes.Profile.route) {
+            ProfileScreen(
                 onNavigate = { route ->
                     navController.navigate(route)
                 }
