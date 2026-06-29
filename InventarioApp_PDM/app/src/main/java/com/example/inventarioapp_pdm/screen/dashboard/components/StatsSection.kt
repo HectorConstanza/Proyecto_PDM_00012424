@@ -11,7 +11,11 @@ import com.example.inventarioapp_pdm.components.StatCard
 import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 
 @Composable
-fun StatsSection() {
+fun StatsSection(
+    totalProducts: Int,
+    lowStockCount: Int,
+    todayDispatches: Int
+) {
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -20,7 +24,7 @@ fun StatsSection() {
 
         StatCard(
             title = "Productos",
-            value = "248",
+            value = totalProducts.toString(),
             valueColor = PrimaryGreen,
             modifier = Modifier.weight(1f),
             subtitle = "Totales",
@@ -29,7 +33,7 @@ fun StatsSection() {
 
         StatCard(
             title = "Stock bajo",
-            value = "12",
+            value = lowStockCount.toString(),
             valueColor = Color(0xFFFF9800),
             modifier = Modifier.weight(1f),
             titleColor = Color(0xFFFF9800)
@@ -37,7 +41,7 @@ fun StatsSection() {
 
         StatCard(
             title = "Despachos",
-            value = "8",
+            value = todayDispatches.toString(),
             valueColor = Color(0xFF1976D2),
             modifier = Modifier.weight(1f),
             subtitle = "Hoy",

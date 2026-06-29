@@ -7,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventarioapp_pdm.components.QuickActionsSection
+import com.example.inventarioapp_pdm.domain.model.Product
 import com.example.inventarioapp_pdm.screen.dashboard.components.LowStockSection
 import com.example.inventarioapp_pdm.screen.dashboard.components.StatsSection
 import com.example.inventarioapp_pdm.ui.theme.Background
@@ -26,6 +26,10 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardViewModel(
+    totalProducts: Int,
+    lowStockCount: Int,
+    todayDispatches: Int,
+    lowStockList: List<Product>,
     modifier: Modifier = Modifier,
     onNavigate: (String) -> Unit = {}
 ) {
@@ -35,7 +39,7 @@ fun DashboardViewModel(
             .background(PrimaryGreen)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // La parte verde de arriba con el saludo
+            // El encabezado verde con el saludo y avisos
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -43,17 +47,10 @@ fun DashboardViewModel(
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
-                    )
-                    
-                    // La campana de avisos con el circulito rojo
+                    // La campana de avisos para saber si algo anda mal
                     BadgedBox(
                         badge = {
                             Badge(
@@ -67,7 +64,7 @@ fun DashboardViewModel(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
-                            contentDescription = "Notifications",
+                            contentDescription = "Notificaciones",
                             tint = Color.White,
                             modifier = Modifier.size(28.dp)
                         )
@@ -83,13 +80,13 @@ fun DashboardViewModel(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Aquí tienes el resumen de tu inventario",
+                    text = "Aquí tienes el resumen de tu negocio",
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 15.sp
                 )
             }
 
-            // El fondo blanco redondeado donde va el contenido
+            // El fondo blanco donde vive el resto de la info
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = Background,
@@ -101,28 +98,35 @@ fun DashboardViewModel(
                         .verticalScroll(rememberScrollState())
                         .padding(horizontal = 24.dp)
                 ) {
-                    // Dejamos un hueco para que las tarjetas de arriba no tapen nada
+                    // Dejamos este espacio para que las tarjetas de arriba no tapen el contenido
                     Spacer(modifier = Modifier.height(140.dp))
 
                     QuickActionsSection(onNavigate = onNavigate)
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    LowStockSection()
+                    LowStockSection(
+                        products = lowStockList,
+                        onSeeAllClick = { onNavigate("inventory") }
+                    )
                     
                     Spacer(modifier = Modifier.height(40.dp))
                 }
             }
         }
 
-        // Las tarjetitas de estadísticas que flotan en medio
+        // Las tarjetas de resumen (estas flotan un poco)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
                 .offset(y = 190.dp) 
         ) {
-            StatsSection()
+            StatsSection(
+                totalProducts = totalProducts,
+                lowStockCount = lowStockCount,
+                todayDispatches = todayDispatches
+            )
         }
     }
 }

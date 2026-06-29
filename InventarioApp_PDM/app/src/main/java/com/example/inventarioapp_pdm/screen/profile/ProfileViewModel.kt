@@ -28,6 +28,7 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 fun ProfileViewModel(
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
+    onNavigateToCategories: () -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
     Column(
@@ -124,6 +125,11 @@ fun ProfileViewModel(
                 ProfileOptionRow(
                     icon = Icons.Default.PersonOutline,
                     title = "Información personal"
+                )
+                ProfileOptionRow(
+                    icon = Icons.Default.Category,
+                    title = "Categorías",
+                    onClick = onNavigateToCategories
                 )
                 ProfileOptionRow(
                     icon = Icons.Default.LockOpen,

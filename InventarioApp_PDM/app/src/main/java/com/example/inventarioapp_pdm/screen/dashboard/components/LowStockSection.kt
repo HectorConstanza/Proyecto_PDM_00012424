@@ -30,8 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventarioapp_pdm.ui.theme.RedStock
 
+import androidx.compose.foundation.clickable
+import com.example.inventarioapp_pdm.domain.model.Product
+
 @Composable
-fun LowStockSection() {
+fun LowStockSection(
+    products: List<Product>,
+    onSeeAllClick: () -> Unit = {}
+) {
 
     Column {
 
@@ -49,7 +55,8 @@ fun LowStockSection() {
                 text = "Ver todos",
                 color = Color(0xFF4CAF50),
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.clickable { onSeeAllClick() }
             )
         }
 
@@ -60,17 +67,27 @@ fun LowStockSection() {
                 .fillMaxWidth()
                 .background(Color.White, RoundedCornerShape(12.dp))
         ) {
-            LowStockItem(
-                name = "Ventilador 18\"",
-                stock = "3 unidades",
-                icon = Icons.Default.Air
-            )
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp, color = Color.LightGray)
-            LowStockItem(
-                name = "Extractor de Aire",
-                stock = "2 unidades",
-                icon = Icons.Default.AcUnit
-            )
+            if (products.isEmpty()) {
+                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                    Text(text = "Todo está bajo control", color = Color.Gray, fontSize = 14.sp)
+                }
+            } else {
+                // Solo mostramos los primeros 3 para no saturar el dashboard
+                products.take(3).forEachIndexed { index, product ->
+                    LowStockItem(
+                        name = product.name,
+                        stock = "${product.stock} ${product.unit}",
+                        icon = Icons.Default.Air // Luego podemos hacerlo dinámico
+                    )
+                    if (index < products.take(3).size - 1) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            thickness = 0.5.dp,
+                            color = Color.LightGray
+                        )
+                    }
+                }
+            }
         }
     }
 }

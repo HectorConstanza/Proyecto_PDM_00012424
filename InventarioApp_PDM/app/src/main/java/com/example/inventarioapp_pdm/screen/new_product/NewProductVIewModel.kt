@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
@@ -22,14 +23,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.inventarioapp_pdm.domain.model.Product
 import com.example.inventarioapp_pdm.ui.theme.Background
 import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewProductViewModel(
+    categories: List<String>, // Ahora recibe solo los nombres de las categorías
     onBack: () -> Unit = {},
-    onSave: () -> Unit = {}
+    onSave: (Product) -> Unit = {}
 ) {
     // Aquí guardamos lo que el usuario va escribiendo
     var productName by remember { mutableStateOf("") }
@@ -38,6 +41,11 @@ fun NewProductViewModel(
     var quantity by remember { mutableStateOf("") }
     var purchasePrice by remember { mutableStateOf("") }
     var salePrice by remember { mutableStateOf("") }
+
+    // Control de categorías dinámicas
+    var expandirCategorias by remember { mutableStateOf(false) }
+    val listaCategorias = (categories.filter { it.isNotEmpty() } ).distinct()
+    var esNuevaCategoria by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -107,13 +115,70 @@ fun NewProductViewModel(
                 placeholder = "Ingresa el nombre"
             )
 
-            NewProductTextField(
-                value = category,
-                onValueChange = { category = it },
-                label = "Categoría",
-                placeholder = "Selecciona una categoría",
-                isReadOnly = true // Esto después será un selector
-            )
+            // Selector de Categoría (Nivel Intermedio y Funcional)
+            Column(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+                Text(
+                    text = "Categoría",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                ExposedDropdownMenuBox(
+                    expanded = expandirCategorias,
+                    onExpandedChange = { expandirCategorias = !expandirCategorias }
+                ) {
+                    OutlinedTextField(
+                        value = category,
+                        onValueChange = { if (esNuevaCategoria) category = it },
+                        placeholder = { Text("Selecciona o escribe una categoría", color = Color.Gray, fontSize = 14.sp) },
+                        modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable, true),
+                        shape = RoundedCornerShape(12.dp),
+                        readOnly = !esNuevaCategoria,
+                        trailingIcon = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (esNuevaCategoria) {
+                                    IconButton(onClick = { 
+                                        esNuevaCategoria = false
+                                        category = categories.firstOrNull() ?: ""
+                                    }) {
+                                        Icon(Icons.Default.Edit, contentDescription = "Cancelar", tint = PrimaryGreen, modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandirCategorias)
+                            }
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White,
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = PrimaryGreen
+                        )
+                    )
+                    
+                    ExposedDropdownMenu(
+                        expanded = expandirCategorias,
+                        onDismissRequest = { expandirCategorias = false }
+                    ) {
+                        listaCategorias.forEach { opcion ->
+                            DropdownMenuItem(
+                                text = { Text(opcion) },
+                                onClick = {
+                                    if (opcion == "Nueva categoría...") {
+                                        esNuevaCategoria = true
+                                        category = ""
+                                    } else {
+                                        esNuevaCategoria = false
+                                        category = opcion
+                                    }
+                                    expandirCategorias = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             // Selector de presentación (Caja o Unidad)
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -173,7 +238,18 @@ fun NewProductViewModel(
 
             // El botón final para guardar todo el relajo
             Button(
-                onClick = onSave,
+                onClick = {
+                    val newProduct = Product(
+                        name = productName,
+                        category = category,
+                        presentation = selectedPresentation,
+                        stock = quantity.toIntOrNull() ?: 0,
+                        purchasePrice = purchasePrice.toDoubleOrNull() ?: 0.0,
+                        salePrice = salePrice.toDoubleOrNull() ?: 0.0,
+                        status = "Activo"
+                    )
+                    onSave(newProduct)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -237,6 +313,7 @@ fun NewProductTextField(
     label: String,
     placeholder: String,
     isReadOnly: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     // Un campo de texto personalizado para que se vea igual al diseño
@@ -255,6 +332,7 @@ fun NewProductTextField(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             readOnly = isReadOnly,
+            trailingIcon = trailingIcon,
             keyboardOptions = keyboardOptions,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = Color.White,

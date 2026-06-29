@@ -26,6 +26,7 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .padding(bottom = paddingValues.calculateBottomPadding()),
             onBack = { onNavigate("dashboard") },
+            onNavigateToCategories = { onNavigate("categories") },
             onLogout = { 
                 // Por ahora solo nos manda al login de mentirillas
                 onNavigate("login") 

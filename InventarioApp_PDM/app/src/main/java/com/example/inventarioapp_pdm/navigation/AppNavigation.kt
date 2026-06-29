@@ -11,6 +11,9 @@ import com.example.inventarioapp_pdm.screen.new_product.NewProductScreen
 import com.example.inventarioapp_pdm.screen.notifications.NotificationsScreen
 import com.example.inventarioapp_pdm.screen.dispatch.DispatchScreen
 import com.example.inventarioapp_pdm.screen.profile.ProfileScreen
+import com.example.inventarioapp_pdm.screen.categories.CategoryScreen
+import com.example.inventarioapp_pdm.screen.onboarding.OnboardingScreen
+import com.example.inventarioapp_pdm.screen.login.LoginScreen
 
 @Composable
 fun AppNavigation() {
@@ -19,9 +22,31 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Dashboard.route
+        startDestination = Routes.Onboarding.route
     ) {
-        // Pantalla principal donde se ve el resumen
+        // Pantalla de bienvenida (la que tiene la caja verde)
+        composable(Routes.Onboarding.route) {
+            OnboardingScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(Routes.Onboarding.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de login para entrar a la app
+        composable(Routes.Login.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Routes.Dashboard.route) {
+                        popUpTo(Routes.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla principal donde se ve el resumen del negocio
         composable(Routes.Dashboard.route) {
             DashboardScreen(
                 onNavigate = { route ->
@@ -30,7 +55,7 @@ fun AppNavigation() {
             )
         }
         
-        // La lista con todos los productos del inventario
+        // La lista con todos los productos guardados en Room
         composable(Routes.Inventory.route) {
             InventoryScreen(
                 onNavigate = { route ->
@@ -43,23 +68,23 @@ fun AppNavigation() {
             )
         }
 
-        // El detalle completo de un solo producto
+        // El detalle completo de un producto (precios, stock, etc)
         composable(Routes.ProductDetail.route) {
             ProductDetailScreen(
                 onBack = { navController.popBackStack() },
-                onEdit = {  },
-                onDispatch = {  }
+                onEdit = { /* Por hacer */ },
+                onDispatch = { /* Por hacer */ }
             )
         }
 
-        // Formulario para meter mercadería nueva
+        // Formulario para meter mercadería nueva al sistema
         composable(Routes.NewProduct.route) {
             NewProductScreen(
                 onBack = { navController.popBackStack() }
             )
         }
 
-        // Pantalla de notificaciones y avisos de stock bajo
+        // Pantalla de chismes y avisos de stock bajo
         composable(Routes.Notifications.route) {
             NotificationsScreen(
                 onNavigate = { route ->
@@ -77,12 +102,19 @@ fun AppNavigation() {
             )
         }
 
-        // Pantalla con los datos del usuario logueado
+        // El perfil del admin con sus opciones
         composable(Routes.Profile.route) {
             ProfileScreen(
                 onNavigate = { route ->
                     navController.navigate(route)
                 }
+            )
+        }
+
+        // Gestión de categorías del catálogo
+        composable(Routes.Categories.route) {
+            CategoryScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }

@@ -25,21 +25,13 @@ import com.example.inventarioapp_pdm.ui.theme.PrimaryGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryViewModel(
+    products: List<Product>, // Ahora los recibimos de afuera (Room)
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onProductClick: (Product) -> Unit = {}
 ) {
-    // datos harcordeados para que se vea llena la pantalla
-    val products = listOf(
-        Product(name = "Ventilador 18\"", presentation = "Caja", stock = 15, category = "Ventiladores"),
-        Product(name = "Ventilador 16\"", presentation = "Unidad", stock = 32, category = "Ventiladores"),
-        Product(name = "Ventilador de Mesa", presentation = "Unidad", stock = 7, category = "Ventiladores"),
-        Product(name = "Extractor de Aire", presentation = "Caja", stock = 3, category = "Extractores"),
-        Product(name = "Rejilla Metálica", presentation = "Caja", stock = 30, category = "Repuestos"),
-        Product(name = "Ventilador Industrial", presentation = "Unidad", stock = 5, category = "Ventiladores"),
-        Product(name = "Aspas de Repuesto", presentation = "Set", stock = 20, category = "Repuestos")
-    )
-
+    // Ya no hay datos harcordeados aquí, usamos la lista de arriba que viene de la base
+    
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -129,11 +121,19 @@ fun InventoryViewModel(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 24.dp)
         ) {
-            items(products) { product ->
-                ProductItem(
-                    product = product,
-                    onClick = { onProductClick(product) }
-                )
+            if (products.isEmpty()) {
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().padding(top = 40.dp), contentAlignment = Alignment.Center) {
+                        Text(text = "No hay productos todavía", color = Color.Gray)
+                    }
+                }
+            } else {
+                items(products) { product ->
+                    ProductItem(
+                        product = product,
+                        onClick = { onProductClick(product) }
+                    )
+                }
             }
         }
     }
